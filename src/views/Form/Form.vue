@@ -5,7 +5,9 @@
                 <div class="item-cover">
                     <div class="title">标题</div>
                     <div class="item-right" @click="changeShowPopup">
-                        <input type="text" :value="itemValue" disabled placeholder="请选择标题">
+						<div class="input">
+							<input type="text" :value="itemValue" disabled placeholder="请选择标题">
+						</div>
                         <div class="arrow-right"></div>
                     </div>
                 </div>
@@ -30,7 +32,10 @@
                 <div class="item-cover">
                     <div class="title">标题</div>
                     <div class="item-right">
-                        <input type="text" v-model="inputMessage" @blur="formatCheck" placeholder="请正确填写标题">
+						<div class="input">
+							<input type="text" v-model="inputMessage" @blur="formatCheck" placeholder="请正确填写标题">
+						</div>
+						<div v-if="inputMessage" class="rewrite" @click="clearInputMessage"></div>
                     </div>
                 </div>
                 <div class="tip" v-if="showWarn">请输入正确的标题</div>
@@ -64,6 +69,11 @@ export default defineComponent({
 
 		const showDialog = ref(false)
 
+		const clearInputMessage = (): void => {
+			setTimeout(() => {
+				inputMessage.value = ""
+			}, 250);
+		}
         const changeShowPopup = (): void => {
             showPopup.value = true
         }
@@ -85,6 +95,7 @@ export default defineComponent({
             showWarn,
 			showDialog,
 
+			clearInputMessage,
             changeShowPopup,
             changeItemValue,
             formatCheck,
@@ -95,6 +106,8 @@ export default defineComponent({
 </script>
 
 <style lang='less' scoped>
+// 定义视口宽度
+@aw: (100 / 750vw);
 .list-box-cover {
     width: 100%;
     height: 100vh;
@@ -102,20 +115,19 @@ export default defineComponent({
 
     .list-box {
         background-color: #fff;
-        margin-bottom: (4/750)*100vw;
         .list-item {
             position: relative;
             display: flex;
             align-items: center;
             width: 100%;
             height: 48px;
-            padding: 0 (24/750)*100vw;
+            padding: 0 24 * @aw;
             box-sizing: border-box;
             color: #000;
 
             &::after {
                 content: '';
-                width: (726/750)*100vw;
+                width: 726 * @aw;
                 height: 0.5px;
                 background-color: #eee;
                 position: absolute;
@@ -131,32 +143,42 @@ export default defineComponent({
                 .title {
                     flex: none;
                     font-size: 17px;
-                    width: (204/750)*100vw;
-                    margin-right: (24/750)*100vw;
+                    width: 204 * @aw;
                     text-align: left;
+					line-height: 24px;
                 }
 
                 .item-right {
                     flex: auto;
                     display: flex;
                     align-items: center;
+					height: 24px;
 
-                    input {
-                        font-size: 17px;
-                        background-color: #fff;
-                        border: none;
-                        text-align: right;
-                        outline: none;
-                        flex: auto;
-                    }
+					.input {
+						flex: auto;
+						width: 100%;
+						height: 100%;
+						
+						input {
+							width: 100%;
+							height: 100%;
+							background-color: #fff;
+							border: none;
+							outline: none;
+							text-align: right;
+							font-size: 17px;
+							line-height: 24px;
+						}
 
-                    input::-webkit-input-placeholder { /* WebKit browsers */
-                        color: #ccc;
-                    }
+						input::-webkit-input-placeholder { /* WebKit browsers */
+							color: #ccc;
+						}
+					}
 
                     .arrow-right {
+						flex: none;
                         width: 20px;
-                        height: 20px;
+                        height: 24px;
                         display: flex;
                         justify-content: center;
                         align-items: center;
@@ -165,17 +187,63 @@ export default defineComponent({
                             content: '';
                             width: 11.5px;
                             height: 11.5px;
-                            border-right: 2px solid #CCC;
-                            border-bottom: 2px solid #CCC;
+                            border-right: 1px solid #CCC;
+                            border-bottom: 1px solid #CCC;
                             transform: rotateZ(-45deg);
                         }
+						&:active {
+							&::after {
+								border-color: rgb(127, 127, 127);
+							}
+						}
                     }
+					.rewrite {
+						flex: none;
+						width: 20px;
+                        height: 24px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+						box-sizing: border-box;
+
+						&::before, &::after {
+							position: absolute;
+                            content: '';
+                            width: 1px;
+                            height: 14px;
+							background-color: #CCC;
+                        }
+
+						&::before {
+							transform: rotateZ(-45deg);
+						}
+
+						&::after {
+                            transform: rotateZ(45deg);
+                        }
+						&:active {
+							animation: rotate .25s forwards;
+
+							&::before, &::after {
+								background-color: rgb(127, 127, 127);
+							}
+						}
+
+						@keyframes rotate {
+							from {
+								transform: rotateZ(0);
+							}
+							to {
+								transform: rotateZ(-180deg);
+							}
+						}
+					}
                 }           
             }
 
             .tip {
                 position: absolute;
-                right: (24/750)*100vw;
+                right: 24 * @aw;
                 bottom: 0;
                 color: red;
                 font-size: 12px;
@@ -195,8 +263,8 @@ export default defineComponent({
                     bottom: 0;
                     width: 100%;
                     background-color: #F5F5F5;
-                    border-top-left-radius: (16/750)*100vw;
-                    border-top-right-radius: (16/750)*100vw;
+                    border-top-left-radius: 16 * @aw;
+                    border-top-right-radius: 16 * @aw;
                     overflow: hidden;
                     animation: popup .5s;
 
@@ -225,15 +293,20 @@ export default defineComponent({
                         background-color: #fff;
                         color: #333;
                         font-size: 18px;
-                    }
+
+						&:active {
+							background-color: rgba(0, 0, 0, .1);
+							color: #0F43FF;
+						}
+                    }					
 
                     .cancel {
                         margin-top: 8px;
                         background-color: #fff;
-                    }
-                    .cancel:active {
-                        color: #0F43FF;
-                        background-color: rgba(0, 0, 0, .1);
+						&:active {
+							background-color: rgba(0, 0, 0, .1);
+							color: #0F43FF;
+						}
                     }
 
                     .blue {

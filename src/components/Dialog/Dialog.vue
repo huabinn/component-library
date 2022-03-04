@@ -48,6 +48,17 @@ export default defineComponent({
 		width: 280px;
 		border-radius: 8px;
 		background-color: #fff;
+		/* animation: fade .3s;
+		@keyframes fade {
+			from {
+				opacity: 0;
+				transform: scale(0.7);
+			}
+			to {
+				opacity: 1;
+				transform: scale(1);
+			}
+		} */
 
 		.dialog-content {
 			display: flex;
@@ -81,17 +92,21 @@ export default defineComponent({
 			color: #0F43FF;
 			font-size: 18px;
 			line-height: 25px;
+
+			&:active {
+				opacity: .5;
+			}
 		}
 
 	}
-	.fade-enter-active, .fade-leave-active {
-		transition: all .3s;
+	.fade-enter-active {
+		transition: all .25s;
 	}
-	.fade-enter{
+	.fade-enter-from {
 		opacity: 0;
 		transform: scale(0.7);
 	}
-	.fade-enter-to{
+	.fade-enter-to {
 		opacity: 1;
 		transform: scale(1);
 	}
