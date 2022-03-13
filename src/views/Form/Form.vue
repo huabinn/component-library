@@ -12,19 +12,21 @@
                     </div>
                 </div>
                 <div class="popup-cover" v-if="showPopup" @click="showPopup = false">
-                    <div class="popup">
-                        <div class="option-scroll">
-                            <div class="option"
-								:class="{blue: itemValue === valueArray[index]}"
-								v-for="(value, index) in valueArray"
-								@click="changeItemValue(index)"
-								:key="index"
-							>
-								{{value}}
+					<transition name='fade' appear>
+						<div class="popup">
+							<div class="option-scroll">
+								<div class="option"
+									:class="{blue: itemValue === valueArray[index]}"
+									v-for="(value, index) in valueArray"
+									@click="changeItemValue(index)"
+									:key="index"
+								>
+									{{value}}
+								</div>
 							</div>
-                        </div>
-                        <div class="option cancel" @click="showPopup = false">取消</div>
-                    </div>
+							<div class="option cancel" @click="showPopup = false">取消</div>
+						</div>
+					</transition>
                 </div>
             </div>
             
@@ -238,7 +240,7 @@ export default defineComponent({
 							}
 						}
 					}
-                }           
+                }
             }
 
             .tip {
@@ -258,6 +260,13 @@ export default defineComponent({
                 background-color: rgba(0, 0, 0, .7);
                 z-index: 9;
 
+				.fade-enter-from {
+					transform: translateY(100%);
+				}
+				.fade-enter-to {
+					transform: translateY(0);
+				}
+
                 .popup {
                     position: fixed;
                     bottom: 0;
@@ -266,7 +275,8 @@ export default defineComponent({
                     border-top-left-radius: 16 * @aw;
                     border-top-right-radius: 16 * @aw;
                     overflow: hidden;
-                    animation: popup .5s;
+					transition: all 0.5s;
+                    /* animation: popup .5s;
 
                     @keyframes popup {
                         from {
@@ -275,7 +285,7 @@ export default defineComponent({
                         to {
                             transform: translateY(0);
                         }
-                    }
+                    } */
 
                     .option-scroll {
                         width: 100%;
