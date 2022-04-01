@@ -63,8 +63,10 @@ export default defineComponent({
 		.dialog-content {
 			display: flex;
 			flex-direction: column;
+			justify-content: center;
 			align-items: center;
 			width: 100%;
+			min-height: 94px;
 			padding: 20px 12px;
 			box-sizing: border-box;
 
